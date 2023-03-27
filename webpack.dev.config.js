@@ -1,6 +1,5 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
-const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
@@ -12,7 +11,17 @@ module.exports = {
     publicPath: "", // path to the assets folder
   },
 
-  mode: "none", // we set this to none to minimize the outputted file
+  mode: "none", // we set it to production to minimize the outputted file
+  devServer: {
+    port: 3000,
+    static: {
+        directory: path.join(__dirname, "dist"),
+    },
+    devMiddleware: {
+        index: "index.html",
+    },
+  },
+
   module: {
     rules: [
       {
@@ -47,7 +56,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new TerserPlugin(), // minifies the outputted file
     new MiniCssExtractPlugin({
       filename: "styles[contenthash].css", // name of the outputted file
     }), // extracts the css into a separate file
@@ -59,6 +67,5 @@ module.exports = {
       },
       template: "./src/index.html", // template file
     }),
-    new CleanWebpackPlugin(),
   ],
 };
